@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Visualizador de Búsqueda Binaria</title>
+  <style>
+    #array {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .box {
+      width: 30px;
+      height: 30px;
+      margin: 0 5px;
+      text-align: center;
+      line-height: 30px;
+      background-color: #ddd;
+    }
+    .highlighted {
+      background-color: #00ff00;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+<body style="background-color:#000000;">
+  <h1><p style="color: #d10000">Visualizador de Búsqueda Binaria</p></h1>
+  <div id="array"></div>
+  <input type="number" id="target" placeholder="Ingresa el número a buscar">
+  <button onclick="binarySearch()">Buscar</button>
+  <div id="output"></div>
+<div id="contenido">
+
+  <script>
+    function generateRandomArray(length, min, max) {
+      const arr = [];
+      for (let i = 0; i < length; i++) {
+        arr.push(Math.floor(Math.random() * (max - min + 1)) + min);
+      }
+      arr.sort((a, b) => a - b); // Ordenar el array para que la búsqueda binaria funcione correctamente
+      return arr;
+    }
+
+    const array = generateRandomArray(10, 1, 20); // Generar un array de 10 números aleatorios entre 1 y 20
+    const boxes = [];
+
+    function renderArray() {
+      const arrayDiv = document.getElementById('array');
+      arrayDiv.innerHTML = '';
+      for (let i = 0; i < array.length; i++) {
+        const box = document.createElement('div');
+        box.className = 'box';
+        box.textContent = array[i];
+        boxes.push(box);
+        arrayDiv.appendChild(box);
+      }
+    }
+
+    function binarySearch() {
+      const target = parseInt(document.getElementById('target').value);
+      const output = document.getElementById('output');
+      output.innerHTML = '';
+
+      let left = 0;
+      let right = array.length - 1;
+      let steps = 0;
+
+      const step = () => {
+        if (left > right) {
+          output.innerHTML += `<p style="color: #d10000">El elemento ${target} no se encuentra en el arreglo.</p>`;
+          resetHighlights();
+          return;
+        }
+
+        const mid = Math.floor((left + right) / 2);
+        boxes[mid].classList.add('highlighted');
+
+        output.innerHTML += `<p style="color: #ffffff">Paso ${steps + 1}: Comparando ${target} con ${array[mid]}</p>`;
+
+        if (array[mid] === target) {
+          output.innerHTML += `<p style="color: #1dc800">El elemento ${target} se encontró en el índice ${mid}.</p>`;
+          resetHighlights();
+          return;
+        } else if (array[mid] < target) {
+          left = mid + 1;
+        } else {
+          right = mid - 1;
+        }
+
+        steps++;
+        setTimeout(step, 1000);
+      }
+
+      step();
+    }
+
+    function resetHighlights() {
+      for (let i = 0; i < boxes.length; i++) {
+        boxes[i].classList.remove('highlighted');
+      }
+    }
+
+    renderArray();
+  </script>
+</body>
+</html>
